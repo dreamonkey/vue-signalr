@@ -136,3 +136,5 @@ createApp(App)
 ```
 
 ### Credits
+
+This package has been inspired by https://github.com/quangdaon/vue-signalr
