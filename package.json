@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./ --fix",
     "format": "prettier --write \"**/*.{json,md,graphql,vue,js,ts}\" --ignore-path .gitignore",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "deploy": "yarn build && yarn publish --tag latest"
   },
   "keywords": [
