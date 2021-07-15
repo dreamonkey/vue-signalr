@@ -16,18 +16,24 @@ type CreateServiceReturntype = ReturnType<typeof createService>;
 export interface SignalRService {
   init: CreateServiceReturntype['init'];
   connected: CreateServiceReturntype['connected'];
-  invoke: <Key extends SignalRCommandKey, Payload = SignalRCommandPayload<Key>>(
+  invoke: <Key extends SignalRCommandKey>(
     methodName: Key,
-    payload: Payload
+    ...payload: SignalRCommandPayload<Key>
   ) => Promise<unknown>;
-  on: <Key extends SignalREventKey, Payload = SignalREventPayload<Key>>(
+  on: <
+    Key extends SignalREventKey,
+    Payload extends unknown[] = SignalREventPayload<Key>
+  >(
     methodName: Key,
-    callback: (arg: Payload) => void,
+    callback: (...payload: Payload) => void,
     options?: SignalROnOptions<Payload>
   ) => void;
-  off: <Key extends SignalREventKey, Payload = SignalREventPayload<Key>>(
+  off: <
+    Key extends SignalREventKey,
+    Payload extends unknown[] = SignalREventPayload<Key>
+  >(
     methodName: Key,
-    callback?: (arg: Payload) => void
+    callback?: (...payload: Payload) => void
   ) => void;
 }
 

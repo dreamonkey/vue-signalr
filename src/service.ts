@@ -5,11 +5,9 @@ import {
   SignalRCommandPayload,
   SignalREventKey,
   SignalREventPayload,
-  VueSignalRConfig,
   SignalROnOptions,
+  VueSignalRConfig,
 } from './models';
-
-// TODO: support rest signature for on, off and invoke payloads
 
 export function createService({
   connection,
@@ -36,14 +34,14 @@ export function createService({
     }
   }
 
-  function invoke<
-    Key extends SignalRCommandKey,
-    Payload = SignalRCommandPayload<Key>
-  >(methodName: Key, payload: Payload) {
+  function invoke<Key extends SignalRCommandKey>(
+    methodName: Key,
+    ...payload: SignalRCommandPayload<Key>
+  ) {
     return new Promise((resolve, reject) => {
       const invokeFn = () =>
         connection
-          .invoke(resolveMethodName(methodName), payload)
+          .invoke(resolveMethodName(methodName), ...payload)
           .then(resolve)
           .catch(reject);
 
@@ -56,21 +54,28 @@ export function createService({
     });
   }
 
-  function on<Key extends SignalREventKey, Payload = SignalREventPayload<Key>>(
+  function on<
+    Key extends SignalREventKey,
+    Payload extends unknown[] = SignalREventPayload<Key>
+  >(
     methodName: Key,
-    callback: (args: Payload) => void,
+    callback: (...payload: Payload) => void,
     { skip }: SignalROnOptions<Payload> = {}
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
+    // TODO: find a way to avoid the payload casting, seems like the Payload type
+    // returns a type incompatible with any[]
     if (skip) {
-      connection.on(originalMethodName, (args: Payload) => {
-        if (!skip(args)) {
-          callback(args);
+      connection.on(originalMethodName, (...payload) => {
+        if (!skip(...(payload as Payload))) {
+          callback(...(payload as Payload));
         }
       });
     } else {
-      connection.on(originalMethodName, callback);
+      connection.on(originalMethodName, (...payload) => {
+        callback(...(payload as Payload));
+      });
     }
 
     if (autoOffInsideComponentScope) {
@@ -88,14 +93,18 @@ export function createService({
     }
   }
 
-  function off<Key extends SignalREventKey, Payload = SignalREventPayload<Key>>(
-    methodName: Key,
-    callback?: (args: Payload) => void
-  ) {
+  function off<
+    Key extends SignalREventKey,
+    Payload extends unknown[] = SignalREventPayload<Key>
+  >(methodName: Key, callback?: (...payload: Payload) => void) {
     const originalMethodName = resolveMethodName(methodName);
 
     if (callback) {
-      connection.off(originalMethodName, callback);
+      // TODO: find a way to avoid the payload casting, seems like the Payload type
+      // returns a type incompatible with any[]
+      connection.off(originalMethodName, (...payload) =>
+        callback(...(payload as Payload))
+      );
     } else {
       connection.off(originalMethodName);
     }

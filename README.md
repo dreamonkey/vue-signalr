@@ -68,13 +68,21 @@ interface SendMessagePayload {
 
 declare module '@dreamonkey/vue-signalr' {
   interface SignalREvents {
-    MessageReceived: MessageReceivedPayload; // Define an event and its payload
-    MainTopicJoined: false; // Define an event with no payload
+    // Define an event, its payload is a single parameter of type `MessageReceivedPayload`
+    MessageReceived: MessageReceivedPayload;
+    // Define an event, its payload is composed by 0 or more parameters of type `MessageReceivedPayload`
+    MultipleMessagesReceived: MessageReceivedPayload[];
+    // Define an event, its payload is composed by exactly 2 parameters of type `MessageReceivedPayload`
+    TwoMessagesReceived: [MessageReceivedPayload, MessageReceivedPayload];
+    // Define an event with no payload
+    MainTopicJoined: false;
   }
 
   interface SignalRCommands {
-    SendMessage: SendMessagePayload; // Define a command and its payload
-    JoinMainTopic: false; // Define a command with no payload
+    // Define a command and its payload
+    SendMessage: SendMessagePayload;
+    // Define a command with no payload
+    JoinMainTopic: false;
   }
 }
 ```

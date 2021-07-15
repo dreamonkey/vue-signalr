@@ -3,26 +3,18 @@ import { LiteralUnion } from './ts-helpers';
 import { SignalRCommands, SignalREvents } from './index';
 
 export type SignalRCommandKey = LiteralUnion<keyof SignalRCommands>;
-export type SignalRCommandPayload<K extends SignalRCommandKey> =
-  K extends keyof SignalRCommands
-    ? SignalRCommands[K] extends false
-      ? undefined
-      : SignalRCommands[K]
-    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      any;
+export type SignalRCommandPayload<
+  K extends SignalRCommandKey,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  P = K extends keyof SignalRCommands ? SignalRCommands[K] : any[]
+> = P extends false ? never[] : P extends unknown[] ? P : [P];
 
 export type SignalREventKey = LiteralUnion<keyof SignalREvents>;
-export type SignalREventPayload<K extends SignalREventKey> =
-  K extends keyof SignalREvents
-    ? SignalREvents[K] extends false
-      ? undefined
-      : SignalREvents[K]
-    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      any;
-
-export type SignalRMethodKey = LiteralUnion<
-  keyof SignalRCommands | keyof SignalREvents
->;
+export type SignalREventPayload<
+  K extends SignalREventKey,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  P = K extends keyof SignalREvents ? SignalREvents[K] : any[]
+> = P extends false ? never[] : P extends unknown[] ? P : [P];
 
 export interface VueSignalRConfig {
   connection: HubConnection;
@@ -31,6 +23,6 @@ export interface VueSignalRConfig {
   failFn: (error: any) => void;
 }
 
-export interface SignalROnOptions<T> {
-  skip?: (arg: T) => boolean;
+export interface SignalROnOptions<Payload extends unknown[]> {
+  skip?: (...payload: Payload) => boolean;
 }
