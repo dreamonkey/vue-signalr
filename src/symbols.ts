@@ -20,20 +20,14 @@ export interface SignalRService {
     methodName: Key,
     ...payload: SignalRCommandPayload<Key>
   ) => Promise<unknown>;
-  on: <
-    Key extends SignalREventKey,
-    Payload extends unknown[] = SignalREventPayload<Key>
-  >(
+  on: <Key extends SignalREventKey>(
     methodName: Key,
-    callback: (...payload: Payload) => void,
-    options?: SignalROnOptions<Payload>
+    callback: (...payload: SignalREventPayload<Key>) => void,
+    options?: SignalROnOptions<SignalREventPayload<Key>>
   ) => void;
-  off: <
-    Key extends SignalREventKey,
-    Payload extends unknown[] = SignalREventPayload<Key>
-  >(
+  off: <Key extends SignalREventKey>(
     methodName: Key,
-    callback?: (...payload: Payload) => void
+    callback?: (...payload: SignalREventPayload<Key>) => void
   ) => void;
 }
 

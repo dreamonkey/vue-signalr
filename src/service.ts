@@ -54,29 +54,22 @@ export function createService({
     });
   }
 
-  function on<
-    Key extends SignalREventKey,
-    Payload extends unknown[] = SignalREventPayload<Key>
-  >(
+  function on<Key extends SignalREventKey>(
     methodName: Key,
-    callback: (...payload: Payload) => void,
-    { skip }: SignalROnOptions<Payload> = {}
+    callback: (...payload: SignalREventPayload<Key>) => void,
+    { skip }: SignalROnOptions<SignalREventPayload<Key>> = {}
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
-    // TODO: find a way to avoid the payload casting, seems like the Payload type
-    // returns a type incompatible with any[]
-    if (skip) {
-      connection.on(originalMethodName, (...payload) => {
-        if (!skip(...(payload as Payload))) {
-          callback(...(payload as Payload));
-        }
-      });
-    } else {
-      connection.on(originalMethodName, (...payload) => {
-        callback(...(payload as Payload));
-      });
-    }
+    connection.on(originalMethodName, (...payload) => {
+      // Needed to make TS happy with a cast
+      const _payload = payload as Parameters<typeof callback>;
+      if (skip && skip(..._payload)) {
+        return;
+      }
+
+      callback(..._payload);
+    });
 
     if (autoOffInsideComponentScope) {
       // Auto-unregister listener if inside a component
@@ -86,25 +79,25 @@ export function createService({
 
         onBeforeUnmount(() => {
           if (activeListenersSet.delete(callback)) {
-            off(originalMethodName, callback);
+            off(methodName, callback);
           }
         });
       }
     }
   }
 
-  function off<
-    Key extends SignalREventKey,
-    Payload extends unknown[] = SignalREventPayload<Key>
-  >(methodName: Key, callback?: (...payload: Payload) => void) {
+  function off<Key extends SignalREventKey>(
+    methodName: Key,
+    callback?: (...payload: SignalREventPayload<Key>) => void
+  ) {
     const originalMethodName = resolveMethodName(methodName);
 
     if (callback) {
-      // TODO: find a way to avoid the payload casting, seems like the Payload type
-      // returns a type incompatible with any[]
-      connection.off(originalMethodName, (...payload) =>
-        callback(...(payload as Payload))
-      );
+      connection.off(originalMethodName, (...payload) => {
+        // Needed to make TS happy with a cast
+        const _payload = payload as Parameters<typeof callback>;
+        callback(..._payload);
+      });
     } else {
       connection.off(originalMethodName);
     }
