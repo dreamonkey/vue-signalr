@@ -4,12 +4,12 @@ export function remapMethod(name: string, alias: string) {
   methodNamesMap.set(alias, name);
 }
 
-export function remapMethods(mappings: [name: string, newName: string][]) {
-  for (const [name, newName] of mappings) {
-    remapMethod(name, newName);
+export function remapMethods(mappings: [name: string, alias: string][]) {
+  for (const [name, alias] of mappings) {
+    remapMethod(name, alias);
   }
 }
 
-export function resolveMethodName(name: string) {
-  return methodNamesMap.get(name) ?? name;
+export function resolveMethodName(nameOrAlias: string) {
+  return methodNamesMap.get(nameOrAlias) ?? nameOrAlias;
 }
