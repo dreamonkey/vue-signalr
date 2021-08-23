@@ -11,5 +11,5 @@ export function remapMethods(mappings: [name: string, alias: string][]) {
 }
 
 export function resolveMethodName(nameOrAlias: string) {
-  return methodNamesMap.get(nameOrAlias) ?? nameOrAlias;
+  return methodNamesMap.get(nameOrAlias) || nameOrAlias;
 }
