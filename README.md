@@ -48,6 +48,24 @@ While SignalR doesn't make a distinction between client side and server side met
 
 Commands can be sent using `signalr.invoke()`, while events can be enabled or disabled using `signalr.on()` and `signalr.off()`
 
+#### Unsubscribing
+
+All Event you create a listener for using `signalr.on()` must be unsubscribed when not used anymore, to avoid memory leaks and erratic code behaviour.
+If you call `signalr.on()` within a Vue component `setup` scope, the listener will be unsubscrived automatically into `onBeforeUnmount` hook.
+This behaviour can be disabled via `autoOffInsideComponentScope` plugin option.
+
+If you disabled it, or you start a listener outside a component scope, you'll need to unsubscribe it manually using `signal.off()` and providing **the same listener function reference** to it.
+Not providing it will remove all listeners from the provided Event
+
+```ts
+const messageReceivedCallback = (message) => console.log(message.prop);
+
+signalr.on('MessageReceived', messageReceivedCallback);
+
+signalr.off('MessageReceived', messageReceivedCallback); // Remove this listener
+signalr.off('MessageReceived'); // Remove all listeners on `MessageReceived` event
+```
+
 ### Type-safety
 
 Command and Events names and payloads are registered via type augmentation of dedicated interfaces (`SignalREvents` and `SignalRCommands`) into `@dreamonkey/vue-signalr` scope.
@@ -85,24 +103,6 @@ declare module '@dreamonkey/vue-signalr' {
     JoinMainTopic: false;
   }
 }
-```
-
-#### Unsubscribing
-
-All Event you create a listener for using `signalr.on()` must be unsubscribed when not used anymore, to avoid memory leaks and erratic code behaviour.
-If you call `signalr.on()` within a Vue component `setup` scope, the listener will be unsubscrived automatically into `onBeforeUnmount` hook.
-This behaviour can be disabled via `autoOffInsideComponentScope` plugin option.
-
-If you disabled it, or you start a listener outside a component scope, you'll need to unsubscribe it manually using `signal.off()` and providing **the same listener function reference** to it.
-Not providing it will remove all listeners from the provided Event
-
-```ts
-const messageReceivedCallback = (message) => console.log(message.prop);
-
-signalr.on('MessageReceived', messageReceivedCallback);
-
-signalr.off('MessageReceived', messageReceivedCallback); // Remove this listener
-signalr.off('MessageReceived'); // Remove all listeners on `MessageReceived` event
 ```
 
 ### Methods remapping

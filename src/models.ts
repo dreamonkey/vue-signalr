@@ -25,4 +25,5 @@ export interface VueSignalRConfig {
 
 export interface SignalROnOptions<Payload extends unknown[]> {
   skip?: (...payload: Payload) => boolean;
+  once?: boolean;
 }

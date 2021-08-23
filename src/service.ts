@@ -57,7 +57,7 @@ export function createService({
   function on<Key extends SignalREventKey>(
     methodName: Key,
     callback: (...payload: SignalREventPayload<Key>) => void,
-    { skip }: SignalROnOptions<SignalREventPayload<Key>> = {}
+    { skip, once }: SignalROnOptions<SignalREventPayload<Key>> = {}
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
@@ -66,6 +66,10 @@ export function createService({
       const _payload = payload as Parameters<typeof callback>;
       if (skip && skip(..._payload)) {
         return;
+      }
+
+      if (once) {
+        off(methodName, callback);
       }
 
       callback(..._payload);
@@ -84,6 +88,14 @@ export function createService({
         });
       }
     }
+  }
+
+  function once<Key extends SignalREventKey>(
+    methodName: Key,
+    callback: (...payload: SignalREventPayload<Key>) => void,
+    options: SignalROnOptions<SignalREventPayload<Key>> = {}
+  ) {
+    on<Key>(methodName, callback, { ...options, once: true });
   }
 
   function off<Key extends SignalREventKey>(
@@ -109,5 +121,6 @@ export function createService({
     invoke,
     on,
     off,
+    once,
   };
 }
