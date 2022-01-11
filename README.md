@@ -1,4 +1,4 @@
-# Vue SignalR Plugin
+# vue-signalr
 
 A Vue3 plugin which wraps SignalR and provider stricted typings.
 
@@ -142,6 +142,12 @@ createApp(App)
   })
   .mount('#app');
 ```
+
+### Possible next steps
+
+- take inspiration from other helpers into https://socket.io/docs/v4/listening-to-events/
+- take inspiration from other features at the end of https://socket.io/docs/v4/how-it-works/
+- add rooms join/leave abstractions (?)
 
 ### Credits
 

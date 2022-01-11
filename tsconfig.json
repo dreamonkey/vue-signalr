@@ -3,7 +3,6 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "declaration": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
