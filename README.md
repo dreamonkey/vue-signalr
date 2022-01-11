@@ -48,6 +48,8 @@ While SignalR doesn't make a distinction between client side and server side met
 
 Commands can be sent using `signalr.invoke()`, while events can be enabled or disabled using `signalr.on()` and `signalr.off()`
 
+<!-- TODO: explain `skip` and `once` -->
+
 #### Unsubscribing
 
 All Event you create a listener for using `signalr.on()` must be unsubscribed when not used anymore, to avoid memory leaks and erratic code behaviour.
