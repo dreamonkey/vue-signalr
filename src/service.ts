@@ -27,7 +27,9 @@ export function createService({
       connected.value = true;
       while (invokeQueue.length) {
         const action = invokeQueue.shift();
-        action?.();
+        // "action?.()" syntax isn't transpiled by TS due to esnext target
+        // and would break projects using the package
+        action && action();
       }
     } catch (error) {
       failFn(error);
