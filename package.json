@@ -1,6 +1,6 @@
 {
   "name": "@dreamonkey/vue-signalr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SignalR plugin for Vue 3",
   "repository": {
     "type": "git",
