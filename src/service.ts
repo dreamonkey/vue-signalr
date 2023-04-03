@@ -48,9 +48,9 @@ export function createService({
           .catch(reject);
 
       if (connected.value) {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        invokeFn();
+        void invokeFn();
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         invokeQueue.push(invokeFn);
       }
     });

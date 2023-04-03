@@ -9,7 +9,6 @@ export const VueSignalR = {
 
     app.provide(SignalRSymbol, service);
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    service.init();
+    void service.init();
   },
 };
