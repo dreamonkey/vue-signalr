@@ -1,6 +1,6 @@
 # vue-signalr
 
-A Vue3 plugin which wraps SignalR and provider stricted typings.
+A Vue3 plugin which wraps SignalR and provider stricter typings.
 
 ## Installation
 
@@ -52,9 +52,9 @@ Commands can be sent using `signalr.invoke()`, while events can be enabled or di
 
 #### Unsubscribing
 
-All Event you create a listener for using `signalr.on()` must be unsubscribed when not used anymore, to avoid memory leaks and erratic code behaviour.
-If you call `signalr.on()` within a Vue component `setup` scope, the listener will be unsubscrived automatically into `onBeforeUnmount` hook.
-This behaviour can be disabled via `autoOffInsideComponentScope` plugin option.
+All Event you create a listener for using `signalr.on()` must be unsubscribed when not used anymore, to avoid memory leaks and erratic code behavior.
+If you call `signalr.on()` within a Vue component `setup` scope, the listener will be unsubscribed automatically into `onBeforeUnmount` hook.
+This behavior can be disabled via `autoOffInsideComponentScope` plugin option.
 
 If you disabled it, or you start a listener outside a component scope, you'll need to unsubscribe it manually using `signal.off()` and providing **the same listener function reference** to it.
 Not providing it will remove all listeners from the provided Event
