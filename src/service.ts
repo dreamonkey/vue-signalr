@@ -12,7 +12,9 @@ import {
 export function createService({
   connection,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  failFn = () => {},
+  connectedFn = () => { },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  failFn = () => { },
   autoOffInsideComponentScope = true,
 }: VueSignalRConfig) {
   const connected = ref(false);
@@ -25,6 +27,9 @@ export function createService({
     try {
       await connection.start();
       connected.value = true;
+      if (connectedFn != null && typeof connectedFn === 'function') {
+        connectedFn();
+      }
       while (invokeQueue.length) {
         const action = invokeQueue.shift();
         // "action?.()" syntax isn't transpiled by TS due to esnext target

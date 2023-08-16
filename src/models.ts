@@ -19,6 +19,7 @@ export type SignalREventPayload<
 export interface VueSignalRConfig {
   connection: HubConnection;
   autoOffInsideComponentScope: boolean;
+  connectedFn: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   failFn: (error: any) => void;
 }
