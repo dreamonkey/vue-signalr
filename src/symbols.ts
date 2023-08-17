@@ -29,6 +29,7 @@ export interface SignalRService {
     methodName: Key,
     callback?: (...payload: SignalREventPayload<Key>) => void
   ) => void;
+  stop: CreateServiceReturntype['stop'];
 }
 
 export const SignalRSymbol: InjectionKey<SignalRService> =

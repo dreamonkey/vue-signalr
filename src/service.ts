@@ -122,6 +122,10 @@ export function createService({
     }
   }
 
+  function stop() {
+    return connection.stop();
+  }
+
   return {
     init,
     connected,
@@ -129,5 +133,6 @@ export function createService({
     on,
     off,
     once,
+    stop,
   };
 }
