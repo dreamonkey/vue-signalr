@@ -27,12 +27,12 @@
   "author": "Paolo Caleffi <p.caleffi@dreamonkey.com> (https://github.com/IlCallo)",
   "license": "MIT",
   "peerDependencies": {
-    "@microsoft/signalr": "^5.0.0 || ^6.0.0 || ^7.0.0",
+    "@microsoft/signalr": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
     "@babel/types": "^7.25.6",
-    "@microsoft/signalr": "^7.0.4",
+    "@microsoft/signalr": "^8.0.7",
     "@types/node": "^20.0.0",
     "eslint": "^8.57.0",
     "eslint-config-coralloy": "^0.4.0",
