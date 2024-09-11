@@ -11,33 +11,33 @@ Install this package and SignalR peer dependency
 Apply the plugin providing a `HubConnection` instance
 
 ```ts
-import { VueSignalR } from '@dreamonkey/vue-signalr';
-import { HubConnectionBuilder } from '@microsoft/signalr';
-import { createApp } from 'vue';
-import App from './App.vue';
+import { VueSignalR } from "@dreamonkey/vue-signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { createApp } from "vue";
+import App from "./App.vue";
 
 // Create your connection
 // See https://docs.microsoft.com/en-us/javascript/api/@microsoft/signalr/hubconnectionbuilder
 const connection = new HubConnectionBuilder()
-  .withUrl('http://localhost:5000/signalr')
+  .withUrl("http://localhost:5000/signalr")
   .build();
 
-createApp(App).use(VueSignalR, { connection }).mount('#app');
+createApp(App).use(VueSignalR, { connection }).mount("#app");
 ```
 
 ## Usage
 
 ```ts
-import { useSignalR } from '@dreamonkey/vue-signalr';
-import { inject } from 'vue';
+import { useSignalR } from "@dreamonkey/vue-signalr";
+import { inject } from "vue";
 
 export default {
   setup() {
     const signalr = useSignalR();
 
-    signalr.invoke('SendMessage', { message });
+    signalr.invoke("SendMessage", { message });
 
-    signalr.on('MessageReceived', ({ message }) => {
+    signalr.on("MessageReceived", ({ message }) => {
       /* do stuff */
     });
   },
@@ -62,10 +62,10 @@ Not providing it will remove all listeners from the provided Event
 ```ts
 const messageReceivedCallback = (message) => console.log(message.prop);
 
-signalr.on('MessageReceived', messageReceivedCallback);
+signalr.on("MessageReceived", messageReceivedCallback);
 
-signalr.off('MessageReceived', messageReceivedCallback); // Remove this listener
-signalr.off('MessageReceived'); // Remove all listeners on `MessageReceived` event
+signalr.off("MessageReceived", messageReceivedCallback); // Remove this listener
+signalr.off("MessageReceived"); // Remove all listeners on `MessageReceived` event
 ```
 
 ### Type-safety
@@ -76,7 +76,7 @@ These types are later used to provide you autocompletion.
 **The package works with plain strings too, you're not required to register Commands/Events typings**
 
 ```ts
-import '@dreamonkey/vue-signalr';
+import "@dreamonkey/vue-signalr";
 
 interface MessageReceivedPayload {
   message: string;
@@ -86,7 +86,7 @@ interface SendMessagePayload {
   message: string;
 }
 
-declare module '@dreamonkey/vue-signalr' {
+declare module "@dreamonkey/vue-signalr" {
   interface SignalREvents {
     // Define an event, its payload is a single parameter of type `MessageReceivedPayload`
     MessageReceived: MessageReceivedPayload;
@@ -112,13 +112,13 @@ declare module '@dreamonkey/vue-signalr' {
 In case you need to remap a Command or Event name, you could do so using `remapMethod` or `remapMethods` helpers
 
 ```ts
-import { remapMethod } from '@dreamonkey/vue-signalr';
+import { remapMethod } from "@dreamonkey/vue-signalr";
 
-remapMethod('receiveMessageWithStrangeMethodName', 'MessageReceived');
+remapMethod("receiveMessageWithStrangeMethodName", "MessageReceived");
 
 remapMethods([
-  ['legacyTopic2Joined', 'MainTopicJoined'],
-  ['createNewMessage', 'SendMessage'],
+  ["legacyTopic2Joined", "MainTopicJoined"],
+  ["createNewMessage", "SendMessage"],
 ]);
 ```
 
@@ -127,12 +127,12 @@ remapMethods([
 You can react to connection/reconnection errors providing a `failFn` option into the plugin options
 
 ```ts
-import { VueSignalR } from '@dreamonkey/vue-signalr';
-import { createApp } from 'vue';
-import App from './App.vue';
+import { VueSignalR } from "@dreamonkey/vue-signalr";
+import { createApp } from "vue";
+import App from "./App.vue";
 
 const connection = new HubConnectionBuilder()
-  .withUrl('http://localhost:5000/signalr')
+  .withUrl("http://localhost:5000/signalr")
   .build();
 
 createApp(App)
@@ -142,7 +142,7 @@ createApp(App)
       /* do stuff */
     },
   })
-  .mount('#app');
+  .mount("#app");
 ```
 
 ### Possible next steps

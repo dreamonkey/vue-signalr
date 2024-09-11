@@ -1,9 +1,9 @@
-export * from './composable';
-export * from './mapping';
-export * from './models';
-export * from './plugin';
-export * from './service';
-export * from './symbols';
+export * from "./composable";
+export * from "./mapping";
+export * from "./models";
+export * from "./plugin";
+export * from "./service";
+export * from "./symbols";
 
 // These interfaces must be here to ease their augmentation
 // even if this creates a circular dependency with models file
@@ -27,7 +27,7 @@ export * from './symbols';
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SignalRCommands {}
 
 /**
@@ -49,5 +49,5 @@ export interface SignalRCommands {}
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SignalREvents {}

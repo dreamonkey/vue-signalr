@@ -1,5 +1,5 @@
-import { getCurrentInstance, onBeforeUnmount, ref } from 'vue';
-import { resolveMethodName } from './mapping';
+import { getCurrentInstance, onBeforeUnmount, ref } from "vue";
+import { resolveMethodName } from "./mapping";
 import {
   SignalRCommandKey,
   SignalRCommandPayload,
@@ -7,7 +7,7 @@ import {
   SignalREventPayload,
   SignalROnOptions,
   VueSignalRConfig,
-} from './models';
+} from "./models";
 
 export function createService({
   connection,
@@ -29,6 +29,7 @@ export function createService({
         const action = invokeQueue.shift();
         // "action?.()" syntax isn't transpiled by TS due to esnext target
         // and would break projects using the package
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         action && action();
       }
     } catch (error) {
@@ -45,12 +46,12 @@ export function createService({
         connection
           .invoke(resolveMethodName(methodName), ...payload)
           .then(resolve)
+          // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
           .catch(reject);
 
       if (connected.value) {
         void invokeFn();
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         invokeQueue.push(invokeFn);
       }
     });
@@ -59,13 +60,16 @@ export function createService({
   function on<Key extends SignalREventKey>(
     methodName: Key,
     callback: (...payload: SignalREventPayload<Key>) => void,
-    { skip, once }: SignalROnOptions<SignalREventPayload<Key>> = {}
+    { skip, once }: SignalROnOptions<SignalREventPayload<Key>> = {},
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
     connection.on(originalMethodName, (...payload) => {
       // Needed to make TS happy with a cast
       const _payload = payload as Parameters<typeof callback>;
+      // "skip?.()" syntax isn't transpiled by TS due to esnext target
+      // and would break projects using the package
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if (skip && skip(..._payload)) {
         return;
       }
@@ -95,14 +99,14 @@ export function createService({
   function once<Key extends SignalREventKey>(
     methodName: Key,
     callback: (...payload: SignalREventPayload<Key>) => void,
-    options: SignalROnOptions<SignalREventPayload<Key>> = {}
+    options: SignalROnOptions<SignalREventPayload<Key>> = {},
   ) {
     on<Key>(methodName, callback, { ...options, once: true });
   }
 
   function off<Key extends SignalREventKey>(
     methodName: Key,
-    callback?: (...payload: SignalREventPayload<Key>) => void
+    callback?: (...payload: SignalREventPayload<Key>) => void,
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
