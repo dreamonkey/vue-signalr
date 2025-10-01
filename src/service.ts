@@ -18,7 +18,7 @@ export function createService({
   const connected = ref(false);
   const invokeQueue: (() => void)[] = [];
   const activeListenersSet = new Set();
-
+  const callbackFuncstions = new Map();
   connection.onclose(failFn);
 
   async function init() {
@@ -64,7 +64,7 @@ export function createService({
   ) {
     const originalMethodName = resolveMethodName(methodName);
 
-    connection.on(originalMethodName, (...payload) => {
+    const callbackFn = (...payload: any[]) => {
       // Needed to make TS happy with a cast
       const _payload = payload as Parameters<typeof callback>;
       // "skip?.()" syntax isn't transpiled by TS due to esnext target
@@ -79,7 +79,13 @@ export function createService({
       }
 
       callback(..._payload);
-    });
+    }
+    if(!callbackFuncstions.has(originalMethodName)){
+      callbackFuncstions.set(originalMethodName, new Map())
+    }
+    callbackFuncstions.get(originalMethodName).set(callback, callbackFn);
+
+    connection.on(originalMethodName, callbackFn);
 
     if (autoOffInsideComponentScope) {
       // Auto-unregister listener if inside a component
@@ -111,13 +117,11 @@ export function createService({
     const originalMethodName = resolveMethodName(methodName);
 
     if (callback) {
-      connection.off(originalMethodName, (...payload) => {
-        // Needed to make TS happy with a cast
-        const _payload = payload as Parameters<typeof callback>;
-        callback(..._payload);
-      });
+      connection.off(originalMethodName, callbackFuncstions.get(originalMethodName).get(callback));
+      callbackFuncstions.get(originalMethodName).delete(callback);
     } else {
       connection.off(originalMethodName);
+      callbackFuncstions.get(originalMethodName).clear()
     }
   }
 
